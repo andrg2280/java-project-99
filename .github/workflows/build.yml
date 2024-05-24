@@ -19,8 +19,6 @@ jobs:
           java-version: '21'
       - name: Build with Gradle
         run: ./app/gradlew clean build jacocoTestReport
-        env:
-          SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
       - name: Make code coverage report
         uses: paambaati/codeclimate-action@v5.0.0
         env:
