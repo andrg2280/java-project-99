@@ -32,3 +32,13 @@ dependencies {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+checkstyle {
+	toolVersion = "10.3.3"
+}
+
+
+tasks.jacocoTestReport {
+	reports {
+		xml.required = true
+	}
+}
