@@ -18,7 +18,7 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
       - name: Build with Gradle
-        run: ./gradlew clean build jacocoTestReport
+        run: ./app/gradlew clean build jacocoTestReport
         env:
           SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
       - name: Make code coverage report
