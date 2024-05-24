@@ -18,7 +18,7 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
       - name: Build with Gradle
-        run: ./app/gradlew clean build jacocoTestReport
+        run: ./gradlew clean build jacocoTestReport
       - name: Make code coverage report
         uses: paambaati/codeclimate-action@v5.0.0
         env:

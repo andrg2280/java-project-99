@@ -1,19 +1,19 @@
 build:
-	./app/gradlew clean build
+	./gradlew clean build
 
 report:
-	./app/gradlew jacocoTestReport
+	./gradlew jacocoTestReport
 
 start:
-	./app/gradlew bootRun --args='--spring.profiles.active=development'
+	./gradlew bootRun --args='--spring.profiles.active=development'
 
 start-prod:
-	./app/gradlew bootRun --args='--spring.profiles.active=production'
+	./gradlew bootRun --args='--spring.profiles.active=production'
 
 install-dist:
-	./app/gradlew clean installDist
+	./gradlew clean installDist
 
 start-dist:
-	./app/build/install/app/bin/app
+	.S/build/install/app/bin/app
 
 .PHONY: build
