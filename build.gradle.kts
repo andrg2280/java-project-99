@@ -1,7 +1,10 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 plugins {
 	application
 	id("org.springframework.boot") version "3.2.7-SNAPSHOT"
 	id("io.spring.dependency-management") version "1.1.5"
+	id("io.sentry.jvm.gradle") version "4.3.1"
 	checkstyle
 	jacoco
 	id("io.freefair.lombok") version "8.4"
@@ -37,13 +40,14 @@ dependencies {
 	testImplementation(platform("org.junit:junit-bom:5.10.0"))
 	implementation("org.instancio:instancio-junit:3.3.0")
 
-
 	testImplementation(platform("org.junit:junit-bom:5.10.0"))
 	testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("net.javacrumbs.json-unit:json-unit-assertj:3.2.2")
+	testImplementation("org.springframework.security:spring-security-test")
 
-	//implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
 
 }
@@ -61,3 +65,18 @@ tasks.jacocoTestReport {
 		xml.required = true
 	}
 }
+sentry {
+	// Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
+	// This enables source context, allowing you to see your source
+	// code as part of your stack traces in Sentry.
+	includeSourceContext = true
+
+	org = "andrg2280"
+	projectName = "java-spring-boot"
+	authToken = System.getenv("SENTRY_AUTH_TOKEN")
+}
+
+tasks.sentryBundleSourcesJava {
+	enabled = System.getenv("SENTRY_AUTH_TOKEN") != null
+}
+

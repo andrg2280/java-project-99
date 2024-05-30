@@ -13,7 +13,7 @@ public class UserUpdateDto {
     @NotNull
     @Email
     private JsonNullable<String> email;
-    @NotNull(message = "Password must be atleast 3 characters")
+    @NotNull(message = "Password must be at least 3 characters")
     @Size(min = 3)
     private JsonNullable<String> passwordDigest;
     private JsonNullable<String> firstName;

@@ -1,16 +1,23 @@
-logging:
-  level:
-    root: WARN
-    org:
-      springframework:
-        security: DEBUG
 spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
   output:
     ansi:
       enabled: always
   profiles:
     default: development
+rsa:
+  private-key: classpath:certs/private.pem
+  public-key: classpath:certs/public.pem
+
+sentry:
+  dsn: https://387d3c74b91542c6b3f3cb7635b060ed@o4506943453200384.ingest.us.sentry.io/4506943506087936
+  # Set traces-sample-rate to 1.0 to capture 100% of transactions for performance monitoring.
+  # We recommend adjusting this value in production.
+  traces-sample-rate: 1.0
+
+springdoc:
+  swagger-ui:
+    path: /swagger.html

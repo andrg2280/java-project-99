@@ -7,7 +7,7 @@ import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.UserMapper;
 import hexlet.code.repository.UserRepository;
 import lombok.AllArgsConstructor;
-//import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    //private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public List<UserDto> getAll() {
         var users = userRepository.findAll();
@@ -30,8 +30,8 @@ public class UserService {
 
     public UserDto create(UserCreateDto dto) {
         var user = userMapper.map(dto);
-       // String hashedPassword = passwordEncoder.encode(user.getPassword());
-        //user.setPassword(hashedPassword);
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(hashedPassword);
         userRepository.save(user);
         return userMapper.map(user);
     }
@@ -47,9 +47,9 @@ public class UserService {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
         userMapper.update(dto, user);
-        /*if (dto.getPasswordDigest() != null) {
+       if (dto.getPasswordDigest() != null) {
             user.setPassword(passwordEncoder.encode(dto.getPasswordDigest().get()));
-        }*/
+        }
         userRepository.save(user);
         var userDto = userMapper.map(user);
         return  userDto;
