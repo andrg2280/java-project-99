@@ -2,7 +2,6 @@ package hexlet.code.component;
 import hexlet.code.dto.LabelCreateDto;
 import hexlet.code.model.User;
 
-
 import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.service.CustomUserDetailsService;
@@ -13,7 +12,6 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import java.lang.Exception;
 import io.sentry.Sentry;
 
 
