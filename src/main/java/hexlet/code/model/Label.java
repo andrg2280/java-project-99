@@ -2,15 +2,15 @@ package hexlet.code.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Table;
 import jakarta.persistence.Id;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Column;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.CascadeType;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,30 +21,25 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
-@Setter
 @Getter
+@Setter
+@Table(name = "labels")
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "tasks")
-public class Task implements BaseEntity {
+public class Label implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @NotBlank
-    @Size(min = 1)
+    @Size(min = 3, max = 1000)
+    @Column(length = 1000, unique = true)
     private String name;
-
-    private int index;
-    private String description;
-    @ManyToOne(cascade = CascadeType.MERGE)
-    private User assignee;
-
-    @NotNull
-    @ManyToOne(cascade = CascadeType.MERGE)
-    private TaskStatus taskStatus;
 
     @CreatedDate
     private LocalDate createdAt;
-    @ManyToMany
-    private Set<Label> labels;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "labels", cascade = CascadeType.MERGE)
+    private Set<Task> tasks;
 }
+
+

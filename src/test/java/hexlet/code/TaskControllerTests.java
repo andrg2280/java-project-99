@@ -3,11 +3,11 @@ package hexlet.code;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.dto.TaskUpdateDto;
 import hexlet.code.mapper.TaskMapper;
-//import hexlet.code.model.Label;
+import hexlet.code.model.Label;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
-//import hexlet.code.repository.LabelRepository;
+import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.UserRepository;
@@ -21,6 +21,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Set;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,32 +48,33 @@ public class TaskControllerTests {
     private TaskStatusRepository taskStatusRepository;
     @Autowired
     private TaskMapper taskMapper;
-   // @Autowired
-   // private LabelRepository labelRepository;
+    @Autowired
+    private LabelRepository labelRepository;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private ModelGenerator modelsGenerator;
+    private ModelGenerator modelGenerator;
     private JwtRequestPostProcessor token;
     private User testUser;
     private Task testTask;
     private TaskStatus testStatus;
-    //private Label testLabel;
+    private Label testLabel;
 
     @BeforeEach
     public void setUp() {
-        testUser = Instancio.of(modelsGenerator.getTestUser()).create();
+        testUser = Instancio.of(modelGenerator.getTestUser()).create();
         userRepository.save(testUser);
 
-        testStatus = Instancio.of(modelsGenerator.getTestStatus()).create();
+        testStatus = Instancio.of(modelGenerator.getTestStatus()).create();
         taskStatusRepository.save(testStatus);
-       // testLabel = Instancio.of(modelsGenerator.getTestLabel())
-        //        .create();
-        //labelRepository.save(testLabel);
 
-        testTask = Instancio.of(modelsGenerator.getTestTask()).create();
+        testLabel = Instancio.of(modelGenerator.getTestLabel()).create();
+        labelRepository.save(testLabel);
+
+        testTask = Instancio.of(modelGenerator.getTestTask()).create();
         testTask.setTaskStatus(testStatus);
         testTask.setAssignee(testUser);
+        testTask.setLabels(Set.of(testLabel));
         taskRepository.save(testTask);
 
         token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
@@ -79,7 +82,7 @@ public class TaskControllerTests {
 
     @Test
     public void testIndex() throws Exception {
-        taskRepository.save(testTask);
+       // taskRepository.save(testTask);
         var result = mockMvc.perform(get("/api/tasks").with(token))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -89,7 +92,7 @@ public class TaskControllerTests {
 
     @Test
     public void testShow() throws Exception {
-        taskRepository.save(testTask);
+       // taskRepository.save(testTask);
 
         var request = get("/api/tasks/" + testTask.getId()).with(token);
         var result = mockMvc.perform(request)
@@ -106,10 +109,10 @@ public class TaskControllerTests {
 
     @Test
     public void testCreate() throws Exception {
-        var newTask = Instancio.of(modelsGenerator.getTestTask()).create();
+        var newTask = Instancio.of(modelGenerator.getTestTask()).create();
         newTask.setTaskStatus(testStatus);
         newTask.setAssignee(testUser);
-       // newTask.setLabels(Set.of(testLabel));
+        newTask.setLabels(Set.of(testLabel));
         var dto = taskMapper.mapToCreateDto(newTask);
 
         var request = post("/api/tasks").with(token)
@@ -151,7 +154,7 @@ public class TaskControllerTests {
 
     @Test
     public void testDestroy() throws Exception {
-        taskRepository.save(testTask);
+       // taskRepository.save(testTask);
 
         var request = delete("/api/tasks/" + testTask.getId()).with(token);
 
@@ -161,4 +164,3 @@ public class TaskControllerTests {
         assertThat(taskRepository.existsById(testTask.getId())).isEqualTo(false);
     }
 }
-

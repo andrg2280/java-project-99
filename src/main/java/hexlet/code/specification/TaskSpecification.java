@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class TaskSpecification {
     public Specification<Task> build(TaskParamsDto params) {
         return withAssigneeId(params.getAssigneeId())
-  //              .and(withLabelId(params.getLabelId()))
+                .and(withLabelId(params.getLabelId()))
                 .and(withStatus(params.getStatus()))
                 .and(withTitleCont(params.getTitleCont()));
     }
@@ -33,9 +33,9 @@ public class TaskSpecification {
                 : criteriaBuilder.equal(root.get("status").get("slug"), status);
     }
 
-    /*private Specification<Task> withLabelId(Long id) {
+    private Specification<Task> withLabelId(Long id) {
         return (root, query, criteriaBuilder) -> id == null
                 ? criteriaBuilder.conjunction()
                 : criteriaBuilder.equal(root.get("labels").get("id"), id);
-    }*/
+    }
 }
