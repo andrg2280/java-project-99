@@ -1,7 +1,5 @@
 package hexlet.code.component;
 import hexlet.code.dto.LabelCreateDto;
-import hexlet.code.dto.LabelDto;
-import hexlet.code.model.Label;
 import hexlet.code.model.User;
 
 
