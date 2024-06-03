@@ -102,13 +102,14 @@ public class TaskControllerTests {
 
     @Test
     public void testShow() throws Exception {
-       // taskRepository.save(testTask);
+        taskRepository.save(testTask);
 
         var request = get("/api/tasks/" + testTask.getId()).with(token);
         var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
         var body = result.getResponse().getContentAsString();
+        System.out.println("TETTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT: " + body);
         assertThatJson(body).and(
                 v -> v.node("index").isEqualTo(testTask.getIndex()),
                 v -> v.node("assignee_id").isEqualTo(testTask.getAssignee().getId()),
