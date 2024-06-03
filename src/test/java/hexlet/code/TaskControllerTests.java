@@ -171,7 +171,7 @@ public class TaskControllerTests {
 
     @Test
     public void testUpdate() throws Exception {
-        //taskRepository.save(testTask);
+        taskRepository.save(testTask);
 
         var data = new TaskUpdateDto();
         data.setTitle(JsonNullable.of("test_title"));
