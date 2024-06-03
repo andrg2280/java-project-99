@@ -48,6 +48,7 @@ public class ModelGenerator {
         testLabel = Instancio.of(Label.class)
                 .ignore(Select.field(Label::getId))
                // .ignore(Select.field(Label::getTasks))
+               // .ignore(Select.field(Task::getLabels))
                 .supply(Select.field(Label::getName), () -> faker.lorem().characters(3, 1000))
                 .toModel();
     }
