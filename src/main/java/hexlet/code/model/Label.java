@@ -38,8 +38,8 @@ public class Label implements BaseEntity {
     @CreatedDate
     private LocalDate createdAt;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "labels", cascade = CascadeType.MERGE)
-    private Set<Task> tasks;
+    /*@ManyToMany(fetch = FetchType.LAZY, mappedBy = "labels", cascade = CascadeType.MERGE)
+    private Set<Task> tasks;*/
 }
 
 

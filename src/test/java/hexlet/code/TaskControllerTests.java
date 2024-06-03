@@ -17,12 +17,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,12 +56,20 @@ public class TaskControllerTests {
     private ObjectMapper objectMapper;
     @Autowired
     private ModelGenerator modelGenerator;
+    @Value("/api/tasks")
+    @Autowired
+    private String url;
     private JwtRequestPostProcessor token;
     private User testUser;
     private Task testTask;
     private TaskStatus testStatus;
     private Label testLabel;
-
+    private Label generatedTestLabel() {
+        var testLabel = Instancio.of(modelGenerator.getTestLabel()).create();
+        labelRepository.save(testLabel);
+        return labelRepository.findByName(
+                testLabel.getName()).orElse(null);
+    }
     @BeforeEach
     public void setUp() {
         testUser = Instancio.of(modelGenerator.getTestUser()).create();
@@ -129,6 +139,34 @@ public class TaskControllerTests {
         assertThat(task.getTaskStatus().getSlug()).isEqualTo(testTask.getTaskStatus().getSlug());
         assertThat(task.getName()).isEqualTo(testTask.getName());
     }
+    /*public void testCreate() throws Exception {
+
+        var newTestTask = Instancio.of(modelGenerator.getTestTask()).create();
+        newTestTask.setTaskStatus(testStatus);
+        newTestTask.setAssignee(testUser);
+        newTestTask.setLabels(Set.of(generatedTestLabel(), generatedTestLabel()));
+
+        var dto = taskMapper.mapToCreateDto(newTestTask);
+
+        var request = post(url).with(jwt())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto));
+
+        mockMvc.perform(request)
+                .andExpect(status().isCreated());
+
+        var task = taskRepository.findByName(
+                newTestTask.getName()).orElseThrow();
+
+        assertThat(task).isNotNull();
+        assertThat(task.getName()).isEqualTo(newTestTask.getName());
+        assertThat(task.getIndex()).isEqualTo(newTestTask.getIndex());
+        assertThat(task.getDescription()).isEqualTo(newTestTask.getDescription());
+        assertThat(task.getTaskStatus().getSlug()).isEqualTo(newTestTask.getTaskStatus().getSlug());
+        assertThat(task.getAssignee().getId()).isEqualTo(newTestTask.getAssignee().getId());
+        assertThat(task.getLabels().stream().map(Label::getId).collect(Collectors.toSet()))
+                .isEqualTo(newTestTask.getLabels().stream().map(Label::getId).collect(Collectors.toSet()));
+    }*/
 
     @Test
     public void testUpdate() throws Exception {

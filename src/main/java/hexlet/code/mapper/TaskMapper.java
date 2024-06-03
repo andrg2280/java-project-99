@@ -57,6 +57,7 @@ public abstract class TaskMapper {
   //  @Mapping(target = "taskLabelIds", source = "labels")
     public abstract TaskCreateDto mapToCreateDto(Task model);
 
+
     public TaskStatus toTaskStatus(String statusSlug) {
         return statusRepository.findBySlug(statusSlug)
                 .orElseThrow(() -> new ResourceNotFoundException("TaskStatus with slug " + statusSlug + " not found"));

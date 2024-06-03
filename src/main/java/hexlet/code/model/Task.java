@@ -1,14 +1,6 @@
 package hexlet.code.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -45,6 +37,9 @@ public class Task implements BaseEntity {
 
     @CreatedDate
     private LocalDate createdAt;
-    @ManyToMany
+    //@ManyToMany
+    //private Set<Label> labels;
+    @ManyToMany(cascade = CascadeType.MERGE,
+            fetch = FetchType.EAGER)
     private Set<Label> labels;
 }
