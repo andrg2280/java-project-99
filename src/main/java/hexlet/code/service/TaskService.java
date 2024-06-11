@@ -73,13 +73,33 @@ public class TaskService {
         return taskMapper.map(task);
     }
 
-    public TaskDto update(TaskUpdateDto dto, Long id) {
-        var task = taskRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
-        taskMapper.update(dto, task);
+    public TaskDto update(TaskUpdateDto data, Long taskId) {
+        var task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new ResourceNotFoundException("Task with id: " + taskId + " not found."));
+
+        taskMapper.update(data, task);
+
+        User assignee = null;
+        if (data.getAssignee_id() != null) {
+            assignee = userRepository.findById(data.getAssignee_id().get()).orElse(null);
+        }
+        task.setAssignee(assignee);
+
+        TaskStatus taskStatus = null;
+        if (data.getStatus() != null) {
+            taskStatus = taskStatusRepository.findBySlug(data.getStatus().get()).orElse(null);
+            task.setTaskStatus(taskStatus);
+        }
+
+        Set<Label> labelSet = null;
+        if (data.getTaskLabelIds() != null) {
+            labelSet = labelRepository.findByIdIn((data.getTaskLabelIds()).get()).orElse(null);
+            task.setLabels(labelSet);
+        }
+
+
         taskRepository.save(task);
-        var result = taskMapper.map(task);
-        return result;
+        return taskMapper.map(task);
     }
 
     public void delete(Long id) {
