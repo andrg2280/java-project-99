@@ -91,7 +91,7 @@ public class TaskControllerTests {
 
     @Test
     public void testIndex() throws Exception {
-       // taskRepository.save(testTask);
+        taskRepository.save(testTask);
         var result = mockMvc.perform(get("/api/tasks").with(token))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -192,7 +192,7 @@ public class TaskControllerTests {
 
     @Test
     public void testDestroy() throws Exception {
-       // taskRepository.save(testTask);
+        taskRepository.save(testTask);
 
         var request = delete("/api/tasks/" + testTask.getId()).with(token);
 
