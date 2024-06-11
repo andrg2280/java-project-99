@@ -193,7 +193,7 @@ public class TaskControllerTests {
 
     @Test
     public void testDestroy() throws Exception {
-        taskRepository.save(testTask);
+        //taskRepository.save(testTask);
 
         var request = delete("/api/tasks/" + testTask.getId()).with(token);
 
