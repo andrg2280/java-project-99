@@ -6,6 +6,10 @@ import hexlet.code.dto.TaskParamsDto;
 import hexlet.code.dto.TaskUpdateDto;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.TaskMapper;
+import hexlet.code.model.Label;
+import hexlet.code.model.TaskStatus;
+import hexlet.code.model.User;
+import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.UserRepository;
@@ -14,6 +18,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -23,6 +28,8 @@ public class TaskService {
     private final TaskSpecification taskSpecification;
     private final TaskStatusRepository taskStatusRepository;
     private final UserRepository userRepository;
+    private final LabelRepository labelRepository;
+
 
     public List<TaskDto> getAll(TaskParamsDto params) {
         var specification = taskSpecification.build(params);
@@ -43,9 +50,27 @@ public class TaskService {
 
     public TaskDto create(TaskCreateDto dto) {
         var task = taskMapper.map(dto);
+
+        User assignee = null;
+        if (dto.getAssignee_id() != 0L) {
+            assignee = userRepository.findById(dto.getAssignee_id()).orElse(null);
+        }
+        task.setAssignee(assignee);
+
+        TaskStatus taskStatus = null;
+        if (dto.getStatus() != null) {
+            taskStatus = taskStatusRepository.findBySlug(dto.getStatus()).orElse(null);
+        }
+        task.setTaskStatus(taskStatus);
+
+        Set<Label> labelSet = null;
+        if (dto.getTaskLabelIds() != null) {
+            labelSet = labelRepository.findByIdIn((dto.getTaskLabelIds())).orElse(null);
+        }
+        task.setLabels(labelSet);
+
         taskRepository.save(task);
-        var result = taskMapper.map(task);
-        return result;
+        return taskMapper.map(task);
     }
 
     public TaskDto update(TaskUpdateDto dto, Long id) {

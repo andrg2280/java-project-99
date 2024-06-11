@@ -138,6 +138,7 @@ public class TaskControllerTests {
         assertThat(task.getAssignee().getId()).isEqualTo(testTask.getAssignee().getId());
         assertThat(task.getTaskStatus().getSlug()).isEqualTo(testTask.getTaskStatus().getSlug());
         assertThat(task.getName()).isEqualTo(testTask.getName());
+
     }
     /*public void testCreate() throws Exception {
 
